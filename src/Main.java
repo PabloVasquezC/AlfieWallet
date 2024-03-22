@@ -1,20 +1,27 @@
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Main {
+
+    public static String generateUniqueID() {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
+        String formattedDateTime = now.format(formatter);
+        return formattedDateTime;
+    }
 
     public static void main(String[] args) {
 
         ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
         // Crear el usuario "admin" con saldo inicial de $3,500,000
-        Usuario admin = new Usuario(3, "admin", "123abc", new AlfieWallet());
+        Usuario admin = new Usuario(generateUniqueID(), "admin", "123abc", new AlfieWallet());
         admin.getWallet().depositar(3500000); // Depositar el saldo inicial
         usuarios.add(admin);
 
         Scanner scanner = new Scanner(System.in);
-        int indiceUsuarioEjecutor = 0;
-        int monto;
-        String nombreUsuario;
+        int indiceUsuarioEjecutor = -1; // Cambiado para que si no se ingresa el usuario, no cause problemas
 
         boolean flagBucleInicial = true;
         while (flagBucleInicial) {
@@ -32,7 +39,7 @@ public class Main {
                     boolean flagSubBucleInicial = true;
                     while(flagSubBucleInicial) {
                         System.out.print("Ingrese su nombre de usuario: ");
-                        nombreUsuario = scanner.nextLine();
+                        String nombreUsuario = scanner.nextLine();
                         System.out.print("Ingrese su contraseña: ");
                         String contrasena = scanner.nextLine();
                         boolean usuarioValido = false;
@@ -46,11 +53,15 @@ public class Main {
                         }
 
                         if (usuarioValido) {
+                            System.out.println(" ");
                             System.out.println("Usuario válido");
+                            System.out.println(" ");
                             break;
                         } else {
+                            System.out.println(" ");
                             System.out.println("Usuario o contraseña incorrectos");
                             System.out.println("Selecciona la acción que deseas realizar a continuación ");
+                            System.out.println(" ");
                             System.out.println("1- Volver a intentar");
                             System.out.println("2- Volver atras");
                             System.out.print(": ");
@@ -67,11 +78,14 @@ public class Main {
 
                 case "2":
                     System.out.print("Ingrese su nombre de usuario: ");
-                    nombreUsuario = scanner.nextLine();
+                    String nombreUsuario = scanner.nextLine();
                     System.out.print("Ingrese su contraseña: ");
                     String contrasena = scanner.nextLine();
-                    Usuario nuevoUsuario = new Usuario((int) (Math.random() * 100), nombreUsuario, contrasena, new AlfieWallet());
+
+                    Usuario nuevoUsuario = new Usuario(generateUniqueID(), nombreUsuario, contrasena, new AlfieWallet());
                     usuarios.add(nuevoUsuario);
+
+                    System.out.println("Nuevo usuario creado");
                     break;
 
                 case "0":
@@ -82,15 +96,8 @@ public class Main {
                     System.out.println("Opción no válida. Por favor, seleccione una opción válida.");
             }
 
-            if (flagBucleInicial) {
-                // instanciar
-                AlfieWallet saldo = new AlfieWallet();
-                AlfieWallet deposito = new AlfieWallet();
-                AlfieWallet retiro = new AlfieWallet();
-
-                System.out.println(" __________________________");
-                System.out.println("|     Billetera Virtual    |");
-                System.out.println(" --------------------------");
+            if (indiceUsuarioEjecutor != -1) { // Solo si se ha seleccionado un usuario válido
+                System.out.println("Bienvenido(a) " + usuarios.get(indiceUsuarioEjecutor).getNombre());
 
                 int opcion;
                 do {
@@ -106,30 +113,25 @@ public class Main {
                     System.out.print("-> ");
 
                     opcion = Integer.parseInt(scanner.nextLine());
-                    ArrayList<Object> transacciones = new ArrayList<>();
 
                     switch (opcion) {
-
-
                         case 0:
                             System.out.println("Cerrando Menu");
                             break;
                         case 1:
-                            // Imprimir saldos de todos los usuarios
                             System.out.println(usuarios.get(indiceUsuarioEjecutor).getWallet().obtenerSaldo());
                             break;
                         case 2:
                             System.out.print("Ingrese el monto a depositar: $");
-                            monto = Integer.parseInt(scanner.nextLine());
+                            int monto = Integer.parseInt(scanner.nextLine());
                             System.out.println("Monto depositado: $" + monto);
                             usuarios.get(indiceUsuarioEjecutor).getWallet().depositar(monto);
-                            transacciones.add("Fecha: "+"Mondo depositado" + monto);
                             break;
                         case 3:
-                            System.out.println("Ingrese el monto a retirar");
-                            monto = Integer.parseInt(scanner.nextLine());
-                            System.out.println("Monto retirado es : " + monto);
-                            usuarios.get(indiceUsuarioEjecutor).getWallet().retirar(monto);
+                            System.out.print("Ingrese el monto a retirar");
+                            int montoRetiro = Integer.parseInt(scanner.nextLine());
+                            System.out.println("Monto retirado es : " + montoRetiro);
+                            usuarios.get(indiceUsuarioEjecutor).getWallet().retirar(montoRetiro);
                             break;
                         case 4:
                             System.out.println("Ingrese al tipo de moneda al cual quiere convertir.");
@@ -138,14 +140,9 @@ public class Main {
                             System.out.print(": ");
                             String aMoneda = scanner.nextLine();
                             usuarios.get(indiceUsuarioEjecutor).getWallet().convertirMoneda(usuarios.get(indiceUsuarioEjecutor).getWallet().obtenerSaldo(), aMoneda);
-
                             break;
                         case 5:
-                            System.out.println("Imprimiendo cartola");
-
-
-                        default:
-                            System.out.println("Opcion no existe");
+                            System.out.println(usuarios.get(indiceUsuarioEjecutor).getWallet().transacciones);
                     }
                 } while (opcion != 0);
             }

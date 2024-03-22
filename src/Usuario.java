@@ -3,7 +3,7 @@ public class Usuario {
 
 
     //atributos
-    private int id;
+    private String id;
     private String nombre;
     private String contrasena;
     private AlfieWallet wallet;
@@ -15,19 +15,19 @@ public class Usuario {
 //    }
 
     //constructor por parametros
-    public Usuario(int id, String nombre, String contrasena, AlfieWallet wallet) {
+    public Usuario(String id, String nombre, String contrasena, AlfieWallet wallet) {
         this.id = id;
         this.nombre = nombre;
         this.contrasena = contrasena;
         this.wallet = new AlfieWallet();
     }
 
-    public int getId() {
+    public String getId() {
 
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
 
         this.id = id;
     }

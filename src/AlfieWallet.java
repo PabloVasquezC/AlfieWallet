@@ -2,6 +2,8 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 
 //Declaración de clase AlfieWallet
@@ -11,7 +13,7 @@ public class AlfieWallet implements Wallet {
 
     //Propiedades de la clase
     private double saldo;
-    private List<String> transacciones = new ArrayList<>();
+    public List<String> transacciones = new ArrayList<>();
 
 
     //Instanciación de la clase Scanner
@@ -29,9 +31,20 @@ public class AlfieWallet implements Wallet {
         System.out.println("cantidad en AlfiWallet " + cantidad);
         if (cantidad > 0) { //&& saldo >= cantidad
             saldo -= cantidad;
-            System.out.println("Saldo..." + obtenerSaldo());
+            transacciones.add("Retiro: " + cantidad);
 
-            System.out.println("restando......" + saldo);
+            System.out.println("restando......" + cantidad);
+
+            // Obtener la fecha actual
+            Date fechaActual = new Date();
+
+            // Formatear la fecha
+            SimpleDateFormat formatoFecha = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+            String fechaFormateada = formatoFecha.format(fechaActual);
+
+            // Agregar la transacción con la fecha
+            transacciones.add("Retiro de $" + cantidad + " realizado en: " + fechaFormateada);
+
 
         } else {
             System.out.println("Ingrese un número mayor a 0 y menor o igual al saldo actual" + saldo);
@@ -62,8 +75,17 @@ public class AlfieWallet implements Wallet {
     @Override
     public void depositar(double cantidad) {
 
-        saldo += cantidad; // 5000
-        transacciones.add("Deposito: +" + saldo);
+        saldo += cantidad;
+        // Obtener la fecha actual
+        Date fechaActual = new Date();
+
+        // Formatear la fecha
+        SimpleDateFormat formatoFecha = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        String fechaFormateada = formatoFecha.format(fechaActual);
+
+        // Agregar la transacción con la fecha
+        transacciones.add("Deposito de $" + cantidad + " realizado en: " + fechaFormateada);
+
 
 
     }
