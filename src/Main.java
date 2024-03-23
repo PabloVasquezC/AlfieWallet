@@ -1,10 +1,15 @@
+// Importaciones necesarias para la correcta ejecución del programa
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+
+// Clase Main
 public class Main {
 
+
+    // Función para crear el Id unico para cada usuario basado en la fecha de creación
     public static String generateUniqueID() {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
@@ -12,31 +17,57 @@ public class Main {
         return formattedDateTime;
     }
 
+
+    // Método main
     public static void main(String[] args) {
 
+        // ArrayList donde se iran almacenando los usuarios
         ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
-        // Crear el usuario "admin" con saldo inicial de $3,500,000
+
+        // Creación del usuario "admin" con saldo inicial de $3,500,000
         Usuario admin = new Usuario(generateUniqueID(), "admin", "123abc", new AlfieWallet());
-        admin.getWallet().depositar(3500000); // Depositar el saldo inicial
+
+        // Depositando el saldo inicial
+        admin.getWallet().depositar(3500000);
+
+        // Añadiendo usuario al ArrayList usuarios
         usuarios.add(admin);
 
+        // Inicialización del objeto scanner
         Scanner scanner = new Scanner(System.in);
-        int indiceUsuarioEjecutor = -1; // Cambiado para que si no se ingresa el usuario, no cause problemas
 
+        // Variable donde se guardara el indice del usuario
+        int indiceUsuarioEjecutor = -1;
+
+
+        // Mensaje de bienvenda
+        System.out.println("");
+        System.out.println("");
+        System.out.println("Bienvenidoo(a) a su billetera digital :D");
+
+        // variable flag del bucle general de la aplicación
         boolean flagBucleInicial = true;
+        // Inicio del bucle
         while (flagBucleInicial) {
-            System.out.println("Bienvenidoo(a) a su billetera digital :D");
-            System.out.println("Acontinuación ingrese la opción que desea realizar");
+
+            // Mensaje de opciones
+            System.out.println("A continuación ingresa la opción que deseas realizar");
             System.out.println("");
             System.out.println("1- Ingresar a billetera personal");
             System.out.println("2- Crear billetera personal");
             System.out.println("0- Salir");
             System.out.print("-> ");
+
+            // Almacenando decision del usuario
             String opcionIngresarOCrear = scanner.nextLine();
 
+            // Controlando el flujo de la aplicación con una sentencia switch
             switch (opcionIngresarOCrear) {
+                // Controlando caso "1" (inicio de seción)
                 case "1":
+                    // Variable flag para controlar la existencia del usuario o la nueva yteración del subBluce
                     boolean flagSubBucleInicial = true;
+                    // Inicio del sub bucle para ingresar a la aplicación
                     while(flagSubBucleInicial) {
                         System.out.print("Ingrese su nombre de usuario: ");
                         String nombreUsuario = scanner.nextLine();
@@ -44,6 +75,7 @@ public class Main {
                         String contrasena = scanner.nextLine();
                         boolean usuarioValido = false;
 
+                        // Verificando la existencia del usuario en el Arraylist de usuarios
                         for (Usuario usuario : usuarios) {
                             if (usuario.getNombre().equals(nombreUsuario) && usuario.getContrasena().equals(contrasena)) {
                                 usuarioValido = true;
@@ -52,21 +84,27 @@ public class Main {
                             }
                         }
 
+                        // Acciones relacionadas con el correcto ingreso del usuario
                         if (usuarioValido) {
                             System.out.println(" ");
                             System.out.println("Usuario válido");
                             System.out.println(" ");
                             break;
-                        } else {
+                        }
+                        // Acciones relacionas con el incorrecto ingreso del usuario
+                        else {
                             System.out.println(" ");
                             System.out.println("Usuario o contraseña incorrectos");
                             System.out.println("Selecciona la acción que deseas realizar a continuación ");
                             System.out.println(" ");
+
+                            // Preguntando al usuario si desea intentar ingresar otra vez o volver a atras
                             System.out.println("1- Volver a intentar");
                             System.out.println("2- Volver atras");
                             System.out.print(": ");
                             String continuidad = scanner.nextLine();
 
+                            // control de flujo para determinar el flujo de la aplicación en base a su decisión
                             if (continuidad.equals("1")) {
                                 flagSubBucleInicial = true;
                             } else {
@@ -76,15 +114,18 @@ public class Main {
                     }
                     break;
 
+                // Controlando caso "2" (creación de usuario)
                 case "2":
                     System.out.print("Ingrese su nombre de usuario: ");
                     String nombreUsuario = scanner.nextLine();
                     System.out.print("Ingrese su contraseña: ");
                     String contrasena = scanner.nextLine();
 
+                    // Creando nuevo usuario
                     Usuario nuevoUsuario = new Usuario(generateUniqueID(), nombreUsuario, contrasena, new AlfieWallet());
                     usuarios.add(nuevoUsuario);
 
+                    System.out.println(" ");
                     System.out.println("Nuevo usuario creado");
                     break;
 
@@ -101,6 +142,7 @@ public class Main {
 
                 int opcion;
                 do {
+                    // Menú de opciones
                     System.out.println(" ____________________________________");
                     System.out.println("| Ingrese una opcion                 |");
                     System.out.println("| 0: para salir                      |");
